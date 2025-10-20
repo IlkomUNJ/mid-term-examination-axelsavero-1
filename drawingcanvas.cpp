@@ -1,4 +1,8 @@
 #include "drawingcanvas.h"
+#include <QPainter>
+#include <QDebug>
+#include <QDir>
+
 
 DrawingCanvas::DrawingCanvas(QWidget *parent)  {
     // Set a minimum size for the canvas
@@ -29,27 +33,52 @@ void DrawingCanvas::segmentDetection(){
     cout << "image width " << image.width() << endl;
     cout << "image height " << image.height() << endl;
 
+    QVector<QPoint> purpleRects;
     //To not crash we set initial size of the matrix
     vector<CustomMatrix> windows(image.width()*image.height());
 
     // Get the pixel value as an ARGB integer (QRgb is a typedef for unsigned int)
-    for(int i = 1; i < image.width()-1;i++){
-        for(int j = 1; j < image.height()-1;j++){
-            bool local_window[3][3] = {false};
+    for (int x = 1; x < image.width() - 1; x++) {
+        for (int y = 1; y < image.height() - 1; y++) {
+            bool window[3][3];
 
-            for(int m=-1;m<=1;m++){
-                for(int n=-1;n<=1;n++){
-                    QRgb rgbValue = image.pixel(i+m, j+n);
-                    local_window[m+1][n+1] = (rgbValue != 0xffffffff);
+            // Take a 3x3 window around (x,y)
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    QColor color(image.pixel(x + i, y + j));
+                    window[i + 1][j + 1] = (color != Qt::white);
                 }
             }
 
-            CustomMatrix mat(local_window);
+            // Check horizontal pattern
+            bool horizontal = window[1][0] && window[1][1] && window[1][2];
+            // Cek vertical pattern
+            bool vertical = window[0][1] && window[1][1] && window[2][1];
+            // Cek diagonal pattern (left-right)
+            bool diag1 = window[0][0] && window[1][1] && window[2][2];
+            // Cek diagonal pattern (right-left
+            bool diag2 = window[0][2] && window[1][1] && window[2][0];
 
-            windows.push_back(mat);
+            if (horizontal || vertical || diag1 || diag2) {
+                purpleRects.push_back(QPoint(x, y));
+            }
         }
     }
-    return;
+    // Draw a small rectangle of purple color to mark the candidate
+    QPainter painter(&pixmap);
+    painter.setBrush(QBrush(Qt::magenta, Qt::SolidPattern));
+    painter.setPen(Qt::NoPen);
+
+    for (const QPoint &pt : purpleRects) {
+        painter.drawRect(pt.x() - 1, pt.y() - 1, 3, 3);
+    }
+
+    image = pixmap.toImage();
+    pixmap.save("segment_detection_result.png");
+    qDebug() << "File saved at:" << QDir::currentPath() + "/segment_detection_result.png";
+
+
+    update();
 }
 
 void DrawingCanvas::paintEvent(QPaintEvent *event){
