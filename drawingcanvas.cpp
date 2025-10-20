@@ -52,11 +52,11 @@ void DrawingCanvas::segmentDetection(){
 
             // Check horizontal pattern
             bool horizontal = window[1][0] && window[1][1] && window[1][2];
-            // Cek vertical pattern
+            // Check vertical pattern
             bool vertical = window[0][1] && window[1][1] && window[2][1];
-            // Cek diagonal pattern (left-right)
+            // Check diagonal pattern (left-right)
             bool diag1 = window[0][0] && window[1][1] && window[2][2];
-            // Cek diagonal pattern (right-left
+            // Check diagonal pattern (right-left
             bool diag2 = window[0][2] && window[1][1] && window[2][0];
 
             if (horizontal || vertical || diag1 || diag2) {
