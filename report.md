@@ -95,3 +95,8 @@ Below is the list of prompts used to build the logic in the `segmentDetection` f
 7.  "QPainter draw rectangle with purple fill and no outline"
 8.  "How to save a QPixmap to a PNG file in Qt?"
 9.  "How to force a QWidget to repaint after drawing with QPainter?"
+
+Link:
+
+
+https://gemini.google.com/app/b91bea09f8c80e11?hl=id
