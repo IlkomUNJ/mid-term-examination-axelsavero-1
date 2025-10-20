@@ -77,11 +77,8 @@ The implementation process is as follows:
 
 The implemented algorithm successfully detected and marked pixels that are part of a straight-line segment. The output is saved in the `segment_detection_result.png` file.
 
-*(**Note:** Please include your `segment_detection_result.png` image here if required, or ensure the file is present in the repository.)*
 
-![Segment Detection Result](segment_detection_result.png)
-
-The image above shows the original strokes with an overlay of small purple rectangles, which mark every candidate pixel detected by the algorithm.
+The image shows the original strokes with an overlay of small purple rectangles, which mark every candidate pixel detected by the algorithm.
 
 ---
 
